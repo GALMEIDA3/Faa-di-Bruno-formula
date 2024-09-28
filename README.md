@@ -1,184 +1,120 @@
-PINN for Solving the Diffusion Equation
-Table of Contents
-Introduction
-Diffusion Equation
+# Physics-Informed Neural Networks for Modeling Diffusion in Plant Science 
+
+This repository contains a Python implementation of Physics-Informed Neural Networks (PINNs) aimed at modeling diffusion processes relevant to plant science. By integrating neural networks with physical principles, this approach allows for the effective simulation and analysis of diffusion phenomena, which are crucial for understanding various biological processes in plants. 
+
+## Table of Contents 
+
+- [Installation](#installation) 
+- [Code Overview](#code-overview) 
+- [Model Architecture](#model-architecture) 
+- [Loss Functions](#loss-functions) 
+- [Training Procedure](#training-procedure) 
+- [Visualization](#visualization) 
+- [Diffusion PDE and Its Applications in Plant Science](#diffusion-pde-and-its-applications-in-plant-science) 
+- [Full Diffusion Equation](#full-diffusion-equation) 
+- [Chosen Boundary and Initial Conditions](#chosen-boundary-and-initial-conditions) 
+- [Example Data](#example-data) 
+- [License](#license) 
+
+## Installation 
+
+To run this code, ensure you have the following dependencies installed: 
+
+```bash 
+pip install numpy tensorflow matplotlib 
+
+## Code Overview
 Model Architecture
-Loss Functions
-Training Process
-Initial and Boundary Conditions
-Visualization
-Usage
-License
-Introduction
-This repository contains a Python implementation of a Physics-Informed Neural Network (PINN) to solve the diffusion equation. The diffusion equation describes how the concentration of a substance changes over time and space, often used in various fields such as physics, chemistry, and biology.
+The model is defined using the PINN class, which inherits from tf.keras.Model. The architecture consists of:
 
-Diffusion Equation
-The diffusion equation can be expressed as:
+Two hidden layers with 20 neurons each and tanh activation functions.
+An output layer that provides the predicted value u(x,t), representing the diffusion process.
 
-∂
-𝑢
-∂
-𝑡
-=
-𝐷
-∂
-2
-𝑢
-∂
-𝑥
-2
-+
-𝑓
-(
-𝑥
-,
-𝑡
-)
-∂t
-∂u
-​
- =D 
-∂x 
-2
- 
-∂ 
-2
- u
-​
- +f(x,t)
-where:
+class PINN(tf.keras.Model): 
+    ...
 
-𝑢
-(
-𝑥
-,
-𝑡
-)
-u(x,t) is the concentration of the substance at position 
-𝑥
-x and time 
-𝑡
-t.
-𝐷
-D is the diffusion coefficient.
-𝑓
-(
-𝑥
-,
-𝑡
-)
-f(x,t) is an external source term that represents additional influences on the concentration.
-In this implementation, we simplify the equation by assuming a constant diffusion coefficient 
-𝐷
-=
-0.01
-D=0.01 and neglecting the external source term 
-𝑓
-(
-𝑥
-,
-𝑡
-)
-f(x,t).
+## Loss Functions
 
-Model Architecture
-The model consists of three fully connected layers with 20 neurons each, using the hyperbolic tangent activation function. The architecture is defined in the PINN class:
+The loss function is composed of three components:
 
-python
-Copy code
-class PINN(tf.keras.Model):
-    def __init__(self):
-        super(PINN, self).__init__()
-        self.dense1 = tf.keras.layers.Dense(20, activation='tanh')
-        self.dense2 = tf.keras.layers.Dense(20, activation='tanh')
-        self.dense3 = tf.keras.layers.Dense(1)  # Output layer
-Loss Functions
-The model incorporates three types of loss functions to train the neural network:
+1. PDE Loss: Measures the residual of the diffusion PDE.
+2. Boundary Loss: Ensures that boundary conditions are satisfied.
+3. Initial Loss: Enforces initial conditions based on the diffusion process.
 
-PDE Loss: Measures the deviation from the diffusion equation.
-Boundary Loss: Ensures the model adheres to specified boundary conditions.
-Initial Loss: Ensures the model adheres to the initial condition.
+
 The total loss is computed as follows:
 
-python
-Copy code
-def compute_loss(model, x, t, x_boundary, t_boundary, x_initial, u_initial, t_initial):
-    pde_loss = loss_pde(model, x, t)
-    boundary_loss = loss_boundary(model, x_boundary, t_boundary)
-    initial_loss = loss_initial(model, x_initial, t_initial, u_initial)
-    total_loss = 10 * pde_loss + boundary_loss + initial_loss  # Adjust weights
-    return total_loss
-Training Process
-The training process uses an Adam optimizer with a learning rate schedule to minimize the total loss over a specified number of epochs:
+def compute_loss(...): 
+    ... 
+## Training Procedure
 
-python
-Copy code
-optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule, clipvalue=1.0)
+The training process involves defining an optimizer with a learning rate schedule and a training loop that runs for a specified number of epochs. During each epoch, the gradients are calculated, and the model weights are updated to minimize the total loss.
 
-def train_pinn(epochs=100):
-    model = PINN()
-    for epoch in range(epochs):
-        loss = train_step(model, x_train, t_train, x_boundary, t_boundary, x_initial, u_initial, t_initial)
-        if epoch % 100 == 0:
-            print(f"Epoch {epoch}: Loss = {loss.numpy()}")
-    return model
-Initial and Boundary Conditions
-In this implementation, the following conditions are applied:
+def train_pinn(epochs=100): 
+    ... 
+## Visualization
 
-Initial Condition: The initial concentration profile is set as 
-𝑢
-(
-𝑥
-,
-0
-)
-=
-sin
-⁡
-(
-𝜋
-𝑥
-)
-u(x,0)=sin(πx).
-Boundary Conditions: Random values are assigned for the boundary conditions.
-These conditions are crucial as they provide the necessary constraints for the model to learn the underlying physical phenomena.
+Two visualization functions are included:
 
-Visualization
-The model provides two visualization functionalities:
+1. Plotting for a Fixed Time: Displays the model's prediction of diffusion at a specified time t.
 
-Fixed Time Plot: Displays the solution 
-𝑢
-(
-𝑥
-,
-𝑡
-)
-u(x,t) for a specific time 
-𝑡
-t.
-Animation: Animates the evolution of the solution over time.
-python
-Copy code
-def plot_fixed_time(model, t_val):
-    # Visualization code...
-    
-def animate_solution(model):
-    # Animation code...
-Usage
-To use this implementation:
+def plot_fixed_time(model, t_val): 
+    ... 
 
-Ensure you have the required libraries:
+2. Animation of Solution Over Time: Creates an animated GIF showing how the diffusion solution evolves as time progresses.
 
-bash
-Copy code
-pip install numpy tensorflow matplotlib
-Run the main script to train the model and visualize the results:
+def animate_solution(model): 
+    ... 
+## Diffusion PDE and Its Applications in Plant Science
 
-python
-Copy code
-# Example data initialization and model training
-model = train_pinn(epochs=1000)
-plot_fixed_time(model, t_val=0.5)
-animate_solution(model)
+The diffusion equation is given by:
+
+$$\frac{\partial u}{\partial x}=D\frac{\partial^2 u}{\partial^2 x}+f(x,t)$$
+
+where:
+
+u(x,t) is the quantity of interest (e.g., concentration), D is the diffusion coefficient, f(x,t) represents an external source term.
+In this implementation, we choose f(x,t)=0 to focus on the pure diffusion process without additional external influences.
+
+
+##  Diffusion Equation
+In our code, we implement the diffusion PDE with the external source term f(x,t) set to zero:
+
+$$\frac{\partial u}{\partial x}=D\frac{\partial^2 u}{\partial^2 x}$$
+ 
+This simplification allows us to analyze how diffusion occurs solely due to concentration gradients.
+
+Chosen Boundary and Initial Conditions
+We implement the following boundary conditions:
+
+u(0,t)=0 (Dirichlet boundary condition at x=0)
+u(1,t)=0 (Dirichlet boundary condition at x=1)
+For initial conditions, we set:
+
+u(x,0)=g(x)  (the initial concentration profile), which can be chosen based on the specific scenario, such as u(x,0)=sin(πx) for a sinusoidal initial distribution.
+
+Example Data
+To train the model, we generate example data as follows:
+
+Random samples for training in the domain [0,1] for both spatial x and time t.
+
+Random samples for boundary conditions and initial conditions based on the defined problem.
+This data serves as the input for training the PINN model.
+
 License
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
