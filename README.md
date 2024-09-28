@@ -20,7 +20,7 @@ This repository contains a Python implementation of Physics-Informed Neural Netw
 
 To run this code, ensure you have the following dependencies installed: 
 
-```bash 
+
 pip install numpy tensorflow matplotlib 
 
 ## Code Overview
