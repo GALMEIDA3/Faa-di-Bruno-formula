@@ -87,7 +87,7 @@ This simplification allows us to analyze how diffusion occurs solely due to conc
 Chosen Boundary and Initial Conditions
 We implement the following boundary conditions:
 
-u(0,t)=0 (Dirichlet boundary condition at x=0)
+u(0,t)=0 (Dirichlet boundary condition at x=0),
 u(1,t)=0 (Dirichlet boundary condition at x=1)
 For initial conditions, we set:
 
