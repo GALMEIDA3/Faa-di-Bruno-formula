@@ -13,7 +13,6 @@ This repository contains a Python implementation of the Faa di Bruno formula, wh
 
 To run this code, you'll need Python installed on your machine, along with the `sympy` library. You can install `sympy` using pip:
 
-```bash
 pip install sympy
 Usage
 Define a tuple A representing the coefficients 
