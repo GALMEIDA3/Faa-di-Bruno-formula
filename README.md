@@ -88,7 +88,9 @@ Chosen Boundary and Initial Conditions
 We implement the following boundary conditions:
 
 u(0,t)=0 (Dirichlet boundary condition at x=0),
+
 u(1,t)=0 (Dirichlet boundary condition at x=1)
+
 For initial conditions, we set:
 
 u(x,0)=g(x)  (the initial concentration profile), which can be chosen based on the specific scenario, such as u(x,0)=sin(πx) for a sinusoidal initial distribution.
